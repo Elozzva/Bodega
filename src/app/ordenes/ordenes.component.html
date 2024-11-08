@@ -1,0 +1,72 @@
+<div class="container mt-4">
+    <h2>Listado de Órdenes</h2>
+    <button (click)="crearOrden()" class="btn btn-primary mb-3">Iniciar Orden</button>
+    <table class="table table-striped mt-4">
+      <thead>
+        <tr>
+          <th>Empleado</th>
+          <th>Fecha de Entrega</th>
+          <th>Estado</th>
+          <th>Productos</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Mostrar un mensaje si no hay órdenes -->
+        <tr *ngIf="orders.length === 0">
+          <td colspan="5" class="text-center">No hay órdenes disponibles</td>
+        </tr>
+  
+        <!-- Mostrar la lista de órdenes -->
+        <tr *ngFor="let order of orders">
+          <td>{{ order.empleado.nombre }}</td>
+          <td>{{ order.fechaEntrega | date }}</td>
+
+          <td>
+            {{ order.estado }}
+            <!-- <span class="badge" [ngClass]="{
+                'badge-warning': order.estado === 'pendiente',
+                'badge-info': order.estado === 'en progreso',
+                'badge-success': order.estado === 'completada',
+                'badge-danger': order.estado === 'cancelada'
+              }">
+            </span> -->
+          </td>
+          <td>
+            <ul>
+              <li *ngFor="let product of order.productos">
+                Producto: {{ product.producto.name }} | Cantidad: {{ product.cantidad }}
+              </li>
+            </ul>
+          </td>
+          <td>
+            
+            <!-- Botón para cambiar el estado a en progreso -->
+            <button *ngIf="order.estado !== 'en progreso'" 
+                    (click)="changeOrdenStatus(order._id, 'en progreso')" 
+                    class="btn btn-info btn-sm">En Progreso</button>
+
+            <!-- Botón para cambiar el estado a Completada -->
+            <button *ngIf="order.estado !== 'completada'" 
+                    (click)="changeOrdenStatus(order._id, 'completada')" 
+                    class="btn btn-success btn-sm">Completar</button>            
+  
+            <!-- Botón para cancelar la orden -->
+            <button *ngIf="order.estado !== 'cancelada'" 
+                    (click)="changeOrdenStatus(order._id, 'cancelada')" 
+                    class="btn btn-warning btn-sm">Cancelar</button>
+  
+            <!-- Botón para eliminar la orden -->
+            <button (click)="deleteOrden(order._id)" class="btn btn-danger btn-sm">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Alertas de stock bajo -->
+<div *ngIf="alertas.length > 0" class="alert alert-danger">
+  <strong>¡Alerta de Stock Bajo!</strong>
+  <ul>
+    <li *ngFor="let alerta of alertas">{{ alerta }}</li>
+  </ul>
+</div>

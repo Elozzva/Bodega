@@ -1,0 +1,39 @@
+<h2 class="text-center my-4">Crear Nueva Orden</h2>
+<div class="card mx-auto my-4" style="max-width: 600px;">
+  <div class="card-body">
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group mb-3">
+        <label for="fechaEntrega">Fecha de Entrega</label>
+        <input type="date" id="fechaEntrega" [(ngModel)]="orden.fechaEntrega" name="fechaEntrega" class="form-control" required>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="empleado">Empleado</label>
+        <select id="empleado" [(ngModel)]="orden.empleado" name="empleado" class="form-control" required>
+          <option *ngFor="let empleado of empleados" [value]="empleado._id">
+            {{ empleado.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group mb-3" *ngFor="let item of orden.productos; let i = index">
+        <label for="producto">Producto</label>
+        <select [(ngModel)]="item.producto" name="producto_{{i}}" class="form-control" required>
+          <option *ngFor="let producto of productos" [value]="producto._id">
+            {{ producto.name }}
+          </option>
+        </select>
+
+        <label for="cantidad">Cantidad</label>
+        <input type="number" [(ngModel)]="item.cantidad" name="cantidad_{{i}}" class="form-control" required min="1">
+
+        <button (click)="eliminarProducto(i)" class="btn btn-danger mt-2">Eliminar</button>
+      </div>
+
+      <button type="button" (click)="agregarProducto()" class="btn btn-primary mt-3">Agregar Producto</button>
+
+      <button type="submit" class="btn btn-success mt-3">Crear Orden</button>
+      <a routerLink="/orders" class="btn btn-danger mt-3">Cancelar</a>
+    </form>
+  </div>
+</div>

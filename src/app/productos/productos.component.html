@@ -1,0 +1,37 @@
+<h1>Lista de Productos</h1>
+<button (click)="crearProducto()" class="btn btn-primary mb-3">Agregar Producto</button>
+
+
+<!-- Tabla para mostrar los productos -->
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Piezas</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let producto of productos">
+      <td>{{ producto.name }}</td>
+      <td>{{ producto.description }}</td>
+      <td>
+        <ul>
+          <li *ngFor="let pieza of producto.piezas">
+            {{ pieza.pieza.nombre }} (Cantidad: {{ pieza.cantidad }})
+          </li>
+        </ul>
+      </td>
+      <td>
+        <!-- Botón para editar -->
+        <button (click)="editarProducto(producto._id)" class="btn btn-warning btn-sm">Editar</button>
+        <!-- Botón para eliminar -->
+        <button (click)="eliminarProducto(producto._id)" class="btn btn-danger btn-sm">Eliminar</button>
+      </td>
+    </tr>
+    <tr *ngIf="productos.length === 0">
+      <td colspan="4" class="text-center">No hay productos registrados.</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,23 @@
+<h1>PIEZAS</h1>
+<h2>Editar pieza</h2>
+<div class="pieza-form-container">
+    
+    <form (ngSubmit)="onSubmit(piezaForm)" #piezaForm="ngForm">
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" [(ngModel)]="pieza.nombre" required>
+      </div>
+  
+      <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <input type="text" id="descripcion" name="descripcion" [(ngModel)]="pieza.descripcion">
+      </div>
+  
+      <div class="form-group mb-3">
+        <label for="stockMinimo" class="form-label">Stock Mínimo</label>
+        <input type="number" id="stockMinimo" name="stockMinimo" [(ngModel)]="pieza.stockMinimo" class="form-control" required>
+      </div>
+  
+      <button type="submit" [disabled]="piezaForm.invalid">Actualizar Pieza</button>
+    </form>
+</div>

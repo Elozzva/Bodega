@@ -1,0 +1,34 @@
+<h1>Lista de Proveedores</h1>
+
+<!-- Botón para agregar un nuevo proveedor -->
+<button (click)="crearProveedor()" class="btn btn-primary mb-3">Agregar Proveedor</button>
+
+<!-- Tabla para mostrar los proveedores -->
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Dirección</th>
+      <th>Teléfono</th>
+      <th>Email</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let proveedor of proveedores">
+      <td>{{ proveedor.name }}</td>
+      <td>{{ proveedor.address }}</td>
+      <td>{{ proveedor.phone }}</td>
+      <td>{{ proveedor.email }}</td>
+      <td>
+        <!-- Botón para editar -->
+        <button (click)="editarProveedor(proveedor._id)" class="btn btn-warning btn-sm">Editar</button>
+        <!-- Botón para eliminar -->
+        <button (click)="eliminarProveedor(proveedor._id)" class="btn btn-danger btn-sm">Eliminar</button>
+      </td>
+    </tr>
+    <tr *ngIf="proveedores.length === 0">
+      <td colspan="5" class="text-center">No hay proveedores registrados.</td>
+    </tr>
+  </tbody>
+</table>

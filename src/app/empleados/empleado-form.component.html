@@ -1,0 +1,60 @@
+<h2 class="text-center my-4">{{ isEditMode ? 'Editar Empleado' : 'Crear Empleado' }}</h2>
+
+<div class="card mx-auto my-4" style="max-width: 600px;">
+  <div class="card-body">
+
+    <form #empleadoForm="ngForm" (ngSubmit)="onSubmit()">
+      <!-- Campo para el nombre del empleado -->
+      <div class="form-group mb-3">
+        <label for="nombre">Nombre</label>
+        <input
+          type="text"
+          id="nombre"
+          name="nombre"
+          class="form-control"
+          [(ngModel)]="empleado.nombre"
+          #nombre="ngModel"
+          required
+          minlength="2"
+          maxlength="50"
+        />
+        <!-- Validaciones para el campo de nombre -->
+        <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)" class="alert alert-danger">
+          <div *ngIf="nombre.errors?.['required']">El nombre es obligatorio.</div>
+          <div *ngIf="nombre.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
+          <div *ngIf="nombre.errors?.['maxlength']">El nombre no puede exceder los 50 caracteres.</div>
+        </div>
+      </div>
+
+      <!-- Campo para el apellido del empleado -->
+      <div class="form-group mb-3">
+        <label for="apellido">Apellido</label>
+        <input
+          type="text"
+          id="apellido"
+          name="apellido"
+          class="form-control"
+          [(ngModel)]="empleado.apellido"
+          #apellido="ngModel"
+          required
+          minlength="2"
+          maxlength="50"
+        />
+        <!-- Validaciones para el campo de apellido -->
+        <div *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)" class="alert alert-danger">
+          <div *ngIf="apellido.errors?.['required']">El apellido es obligatorio.</div>
+          <div *ngIf="apellido.errors?.['minlength']">El apellido debe tener al menos 2 caracteres.</div>
+          <div *ngIf="apellido.errors?.['maxlength']">El apellido no puede exceder los 50 caracteres.</div>
+        </div>
+      </div>
+
+      <!-- Botón para enviar el formulario -->
+      <button type="submit" class="btn btn-primary" [disabled]="empleadoForm.invalid">
+        {{ isEditMode ? 'Actualizar Empleado' : 'Crear Empleado' }}
+      </button>
+
+      <!-- Botón para cancelar y regresar a la lista de empleados -->
+      <button type="button" class="btn btn-secondary" (click)="navigateBack()">
+        Cancelar
+      </button>
+    </form>

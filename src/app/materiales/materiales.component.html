@@ -1,0 +1,28 @@
+<h1 class="text-center my-4">Materiales</h1>
+<h2 class="text-center">Agregar Material</h2>
+
+<div class="card mx-auto my-4" style="max-width: 600px;">
+  <div class="card-body">
+    <form [formGroup]="materialForm" (ngSubmit)="onSubmit()">
+      <div class="form-group mb-3">
+        <label for="name" class="form-label">Nombre del material</label>
+        <input type="text" class="form-control" id="name" formControlName="name" placeholder="Ingrese el nombre del material" required>
+      </div>
+      <div class="form-group mb-3">
+        <label for="description" class="form-label">Descripción</label>
+        <textarea class="form-control" id="description" formControlName="description" rows="4" placeholder="Describa el material"></textarea>
+      </div>
+      <div class="form-group mb-3">
+        <label for="stockMinimo">Stock Mínimo</label>
+        <input type="number" id="stockMinimo" formControlName="stockMinimo" class="form-control" required>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-success">Agregar Material</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+

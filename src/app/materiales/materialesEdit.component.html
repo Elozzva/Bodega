@@ -1,0 +1,15 @@
+<h1>MATERIALES</h1>
+<h2>Editar material</h2>
+
+<form [formGroup]="materialForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Nombre del material:</label>
+      <input type="text" id="name" formControlName="name">
+    </div>
+    <div class="form-group">
+      <label for="description">Descripción:</label>
+      <textarea id="description" formControlName="description"></textarea>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>

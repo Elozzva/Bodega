@@ -1,0 +1,78 @@
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
+<h2 class="text-center my-4">{{ isEditMode ? 'Editar Fabricación' : 'Agregar Fabricación' }}</h2>
+<div class="card mx-auto my-4" style="max-width: 600px;">
+  <div class="card-body">
+    <form (ngSubmit)="onSubmit()">
+      
+      <!-- Selección del material -->
+      <div class="form-group mb-3">
+        <label for="material">Material</label>
+        <select id="material" name="material" [(ngModel)]="fabricacion.material" (change)="onMaterialChange($event)" required class="form-control">
+          <option *ngFor="let material of materiales" [value]="material._id">{{ material.name }}</option>
+        </select>
+      </div>
+
+      <!-- Selección de la receta (después de seleccionar el material) -->
+      <div class="form-group mb-3" *ngIf="recetas.length > 0">
+        <label for="receta">Receta</label>
+        <select id="receta" name="receta" [(ngModel)]="fabricacion.receta" (change)="onRecetaChange()" required class="form-control">
+          <option *ngFor="let receta of recetas" [value]="receta._id">
+            {{ receta.pieza.nombre }} - {{ receta.piezasPorUnidad }} piezas por material
+          </option>
+        </select>
+      </div>
+
+      <!-- Ingreso de la cantidad de material -->
+      <div class="form-group mb-3" *ngIf="fabricacion.receta">
+        <label for="cantidadMaterial">Cantidad de Material a Usar</label>
+        <input type="number" id="cantidadMaterial" name="cantidadMaterial" [(ngModel)]="fabricacion.cantidadMaterial" (input)="onRecetaChange()" required class="form-control" min="1">
+      </div>
+
+      <!-- Muestra la cantidad de piezas que se producirán -->
+      <div class="form-group mb-3" *ngIf="fabricacion.piezasCalculadas > 0">
+        <p><strong>Piezas calculadas: </strong> {{ fabricacion.piezasCalculadas }}</p>
+      </div>
+
+      <!-- Mostrar si la fabricación es interna o externa automáticamente -->
+      <div class="form-group mb-3">
+        <label for="tipo" class="form-label">Tipo de Fabricación</label>
+        <input type="text" id="tipo" name="tipo" [(ngModel)]="fabricacion.tipo" class="form-control" readonly>
+      </div>
+      
+
+      <!-- Proveedor o Empleado según el tipo de fabricación -->
+      <div class="form-group mb-3" *ngIf="fabricacion.tipo === 'externa'">
+        <label for="proveedor">Proveedor</label>
+        <select id="proveedor" name="proveedor" [(ngModel)]="fabricacion.proveedor" class="form-control" required>
+          <option *ngFor="let proveedor of proveedores" [value]="proveedor._id">
+            {{ proveedor.name }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-group mb-3" *ngIf="fabricacion.tipo === 'interna'">
+        <label for="empleado">Empleado Encargado</label>
+        <select id="empleado" name="empleado" [(ngModel)]="fabricacion.empleado" class="form-control" required>
+          <option *ngFor="let empleado of empleados" [value]="empleado._id">
+            {{ empleado.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="fechaEntrega">Fecha de Entrega</label>
+        <input type="date" id="fechaEntrega" name="fechaEntrega" [(ngModel)]="fabricacion.fechaEntrega" required class="form-control">
+      </div>
+
+      <!-- Botones de enviar y cancelar -->
+      <button 
+          type="submit" 
+          class="btn btn-success" 
+          [disabled]="!isStockAvailable">
+            {{ isEditMode ? 'Actualizar' : 'Crear Fabricación' }}
+      </button>
+      <a routerLink="/fabricaciones" class="btn btn-secondary">Cancelar</a>
+    </form>
+    
+  </div>
+</div>

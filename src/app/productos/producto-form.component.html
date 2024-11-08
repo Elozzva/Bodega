@@ -1,0 +1,48 @@
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
+<h1 class="text-center my-4">{{ isEditMode ? 'Editar Producto' : 'Agregar Producto' }}</h1>
+<div class="card mx-auto my-4" style="max-width: 600px;">
+  <div class="card-body">
+    <form (ngSubmit)="onSubmit()">
+      <!-- Campo de nombre del producto -->
+      <div class="form-group mb-3">
+        <label for="name">Nombre del Producto</label>
+        <input type="text" id="name" [(ngModel)]="producto.name" name="name" required class="form-control">
+      </div>
+
+      <!-- Campo de descripción del producto -->
+      <div class="form-group mb-3">
+        <label for="description">Descripción del Producto</label>
+        <textarea id="description" [(ngModel)]="producto.description" name="description" class="form-control"></textarea>
+      </div>
+
+      <!-- Piezas asociadas al producto -->
+      <div class="form-group mb-3">
+        <label>Piezas</label>
+        <div *ngFor="let pieza of producto.piezas; let i = index" class="form-row">
+          <!-- Selector de piezas -->
+          <div class="col mb-3">
+            <select [(ngModel)]="pieza.pieza" name="pieza_{{i}}" class="form-control" required>
+              <option *ngFor="let piezaDisponible of piezasDisponibles" [value]="piezaDisponible._id">
+                {{ piezaDisponible.nombre }}
+              </option>
+            </select>
+          </div>
+          <!-- Campo de cantidad -->
+          <div class="col mb-3">
+            <input type="number" [(ngModel)]="pieza.cantidad" name="cantidad_{{i}}" class="form-control" required min="1">
+          </div>
+          <!-- Botón para eliminar pieza -->
+          <div class="col">
+            <button type="button" (click)="eliminarPieza(i)" class="btn btn-danger">Eliminar</button>                  
+            <!-- Botón para agregar más piezas -->
+            <button type="button" (click)="agregarPieza()" class="btn btn-primary">Agregar otra pieza</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de enviar y cancelar -->
+      <button type="submit" class="btn btn-success">{{ isEditMode ? 'Actualizar' : 'Crear' }} Producto</button>
+      <button type="button" (click)="cancelar()" class="btn btn-secondary">Cancelar</button>
+    </form>
+  </div>
+</div>

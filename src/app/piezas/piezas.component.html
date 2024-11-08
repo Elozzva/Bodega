@@ -1,0 +1,34 @@
+<h1>PIEZAS</h1>
+
+
+<div class="piezas-container">
+  
+  <button (click)="crearPieza()" class="btn btn-primary mb-3">Agregar Nueva Pieza</button> <!-- Botón para agregar -->
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Piezas minimas en Stock</th>
+        <th></th>
+      </tr>
+    </thead>
+  <tbody>
+    <tr *ngFor="let pieza of piezas">
+      <td>{{ pieza.nombre }}</td> 
+      <td>{{ pieza.descripcion }}</td> 
+      <td>{{ pieza.stockMinimo }}</td> 
+      <td>
+        <div class="actions">
+          <button (click)="editarPieza(pieza._id)">Editar</button>
+          <button (click)="eliminarPieza(pieza._id)">Eliminar</button>
+        </div>
+    </td>
+    </tr>
+  </tbody>
+  </table>
+</div>
+
+
+
+

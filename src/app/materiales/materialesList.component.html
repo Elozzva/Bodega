@@ -1,0 +1,27 @@
+<h1>MATERIALES</h1>
+
+<button (click)="crearMaterial()" class="btn btn-primary mb-3">Agregar Material</button>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Material minimo en stock</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let material of materials">
+        <td>{{ material.name }}</td>
+        <td>{{ material.description }}</td>
+        <td>{{ material.stockMinimo }}</td>
+        <td> 
+          <div class="actions"> 
+            <button (click)="editMaterial(material._id)">Editar</button>
+            <button (click)="deleteMaterial(material._id)">Eliminar</button>
+          </div>
+        </td>
+      </tr>
+  </tbody>
+</table>

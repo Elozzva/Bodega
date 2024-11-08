@@ -1,0 +1,60 @@
+<h1>Gestión de Fabricaciones</h1>
+
+<button (click)="crearFabricacion()" class="btn btn-primary mb-3">Iniciar Fabricación</button>
+
+<table>
+  <thead>
+    <tr>
+      <th>Material</th>
+      <th>Pieza</th>
+      <th>Cantidad a fabricar</th>
+      <th>Proveedor/Empleado</th>
+      <th>Fecha de Entrega</th>
+      <th>Estado</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Mostrar cada fabricación -->
+    <ng-container *ngFor="let fabricacion of fabricaciones">
+      <tr>
+        <td>{{ fabricacion.material?.name || 'Material no disponible' }}</td>
+        <td>{{ fabricacion.receta?.pieza?.nombre || 'Pieza no encontrada' }}</td>
+        <td>{{ fabricacion.cantidad }}</td>
+        <td>
+          <!-- Mostrar el proveedor si es externa, o el empleado si es interna -->
+          {{ fabricacion.tipo === 'externa' ? (fabricacion.proveedor?.name || 'Proveedor no disponible') : (fabricacion.empleado?.nombre || 'Empleado no disponible') }}
+        </td>
+        <td>{{ fabricacion.fechaEntrega | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ fabricacion.estado }}</td>
+        <td>
+          <!-- Mostrar acciones según el estado de la fabricación -->
+          <button *ngIf="fabricacion.estado === 'pendiente'" (click)="iniciarFabricacion(fabricacion)">
+            Iniciar
+          </button>
+          <button *ngIf="fabricacion.estado === 'en progreso'" (click)="completarFabricacion(fabricacion)">
+            Completar
+          </button>
+          <button *ngIf="fabricacion.estado !== 'completada' && fabricacion.estado !== 'cancelada'" (click)="cancelarFabricacion(fabricacion)">
+            Cancelar
+          </button>
+        </td>
+      </tr>
+
+      <!-- Mensaje para cuando el stock está bajo, separado en otro tr -->
+      <tr *ngIf="advertencias.length>0">
+        <ng-container *ngFor="let advertencia of advertencias" >
+          <td colspan="7" class="text-center alert alert-warning">
+            {{ advertencias }}
+          </td>
+        </ng-container>
+      </tr>
+    </ng-container>
+    
+    <!-- Mensaje para cuando no haya fabricaciones -->
+    <tr *ngIf="fabricaciones.length === 0">
+      <td colspan="7" class="text-center">No hay fabricaciones por hacer.</td>
+    </tr>
+    
+  </tbody>
+</table>

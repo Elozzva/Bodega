@@ -1,0 +1,35 @@
+<h1>RECETAS</h1>
+
+<h2>Lista de Recetas</h2>
+
+<button (click)="crearReceta()" class="btn btn-primary mb-3">Agregar Receta</button>
+
+<div class="recetas-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre de la pieza</th>
+        <th>Material a usar</th>
+        <th>Piezas por material</th>
+        <th>Se fabrica</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let receta of recetas">        
+        <td>{{ receta.pieza.nombre }}</td>
+        <td>{{ receta.material.name }}</td>
+        <td>{{ receta.piezasPorUnidad }}</td>
+        <td>{{ receta.seFabrica }}</td>
+        <td>
+          <div class="actions">
+            <button (click)="deleteReceta(receta._id)" >Eliminar</button>          
+            <button class="btn btn-primary" (click)="editarReceta(receta._id)">Editar</button>
+          </div>
+      </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  
+        

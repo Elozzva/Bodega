@@ -1,0 +1,35 @@
+<div class="receta">
+    <h2>Editar Receta</h2>
+    <form (ngSubmit)="onSubmit(recetaForm)" #recetaForm="ngForm">
+      <div class="form-group">
+        <label for="material">Material</label>
+        <select id="material" name="material" [(ngModel)]="receta.material" required>
+            <option *ngFor="let material of materiales" [value]="material._id">
+              {{ material.name }}
+            </option>
+          </select>
+      </div>
+  
+      <div class="form-group">
+        <label for="pieza">Pieza que se crea</label>
+        <input type="text" id="pieza" name="pieza" [(ngModel)]="receta.pieza">
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="seFabrica" class="form-label">¿Se Fabrica?</label>
+        <select id="seFabrica" name="seFabrica" [(ngModel)]="receta.seFabrica" class="form-control" required>
+          <option value="">Seleccionar opción</option>
+          <option value="interna">Interna</option>
+          <option value="externa">Externa</option>
+          <option value="no">No se fabrica</option>
+        </select>
+      </div>
+  
+      <div class="form-group">
+        <label for="piezasPorUnidad">Piezas creadas por unidad</label>
+        <input type="number" id="piezasPorUnidad" name="piezasPorUnidad" [(ngModel)]="receta.piezasPorUnidad" required>
+      </div>
+  
+      <button type="submit" [disabled]="recetaForm.invalid">Actualizar Pieza</button>
+    </form>
+</div>
