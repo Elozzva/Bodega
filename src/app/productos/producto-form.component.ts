@@ -14,6 +14,7 @@ import { PiezaService } from '../pieza.service';  // Servicio para obtener pieza
 })
 export class ProductoFormComponent implements OnInit {
   producto = {
+    clave: '',
     name: '',
     description: '',
     piezas: [{ pieza: '', cantidad: 0 }]  // Inicializamos con una pieza vacía

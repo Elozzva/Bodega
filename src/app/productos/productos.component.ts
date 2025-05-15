@@ -58,7 +58,7 @@ export class ProductosComponent implements OnInit {
   }
 
   // Función para navegar a la edición de un producto
-  editarProducto(id: string): void {
+  editarProduct(id: string): void {
     this.router.navigate([`/productos/edit/${id}`]);
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core';
 import { RecetaService } from '../receta.service';
@@ -11,6 +12,8 @@ import Swal from 'sweetalert2';
 })
 export class RecetasComponent implements OnInit {
   recetas: any[] = [];
+  recetasFiltradas: any[] = [];
+  filtro: string = '';
 
   constructor(
     private recetaService: RecetaService,
@@ -19,13 +22,24 @@ export class RecetasComponent implements OnInit {
 
   ngOnInit(): void {
     this.recetaService.getRecetas().subscribe(
-      data => this.recetas = data,
+      data => {
+        this.recetas = data;
+        this.recetasFiltradas = data;
+      },
       error => console.error('Error al cargar las recetas:', error)
     );
   }
 
   crearReceta(): void {
     this.router.navigate(['recetas/create']);
+  }
+
+  buscarRecetas(): void {
+    const term = this.filtro.toLowerCase().trim();
+    this.recetasFiltradas = this.recetas.filter(receta =>
+      receta.pieza?.nombre?.toLowerCase().includes(term) ||
+      receta.material?.name?.toLowerCase().includes(term)
+    );
   }
 
   editarReceta(recetaId: string): void {

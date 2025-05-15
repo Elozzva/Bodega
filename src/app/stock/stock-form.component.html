@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
 <h1 class="text-center my-4">Gestión de Inventario</h1>
 <h3 class="text-center my-4">{{ isEditMode ? 'Editar Stock' : 'Agregar Nuevo Stock' }}</h3>
 
@@ -6,16 +7,22 @@
     <form (ngSubmit)="onSubmit()">
       <!-- Campo para seleccionar el material -->
       <div class="form-group mb-3">
-        <label for="tipo" class="form-label">Material</label>
-        <select id="material" name="material" [(ngModel)]="stock.material" required class="form-control">
+        <label for="material" class="form-label">Material</label>
+        <select id="material" name="material" [(ngModel)]="stock.material" (change)="onMaterialChange()" required class="form-control">
           <option value="" disabled selected>Seleccione un material</option>
           <option *ngFor="let material of materiales" [value]="material._id">{{ material.name }}</option>
         </select>
       </div>
 
-      <!-- Campo para ingresar la cantidad -->
+      <!-- Mostrar cantidad actual del material seleccionado (Solo lectura) -->
+      <div class="form-group mb-3">
+        <label class="form-label">Cantidad Actual en Inventario</label>
+        <input type="number" class="form-control" [value]="cantidadActual" readonly>
+      </div>
+
+      <!-- Campo para ingresar la cantidad nueva -->
       <div class="form-group">
-        <label for="cantidad" class="form-label">Cantidad</label>
+        <label for="cantidad" class="form-label">Cantidad a Agregar</label>
         <input type="number" id="cantidad" name="cantidad" [(ngModel)]="stock.cantidad" class="form-control" required>
       </div>
 
@@ -24,6 +31,7 @@
         <button type="submit" class="btn btn-success">
           {{ isEditMode ? 'Actualizar' : 'Crear' }}
         </button>
+        <button type="button" (click)="cancelar()" class="btn btn-secondary">Cancelar</button>
       </div>
     </form>
   </div>

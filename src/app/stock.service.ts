@@ -34,9 +34,18 @@ export class StockService {
       );
   }
 
+  getStockByMaterial2(materialId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/material/${materialId}`);
+  }
+
    // Método para actualizar un stock existente
    updateStock(id: string, stockData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, stockData);
+    return this.http.put(`${this.apiUrl}/${id}`, stockData).pipe(
+      catchError(error => {
+        console.error('Error al actualizar el stock:', error);
+        return throwError(error);
+      })
+    );
   }
 
   // Eliminar una entrada de stock

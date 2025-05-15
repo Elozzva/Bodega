@@ -13,6 +13,7 @@ import { NotificationService } from '../notification.service';
 })
 export class PiezaFormComponent {
   pieza = {
+    clave: '',
     nombre: '',
     descripcion: '',
     stockMinimo: 10

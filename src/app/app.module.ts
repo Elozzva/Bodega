@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 //import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule,FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';  
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 
@@ -43,6 +45,7 @@ import { PiezasEditComponent } from './piezas/piezasEdit.component';
 import { ProductService } from './producto.service';
 import { ProductosComponent } from './productos/productos.component';
 import { ProductoFormComponent } from './productos/producto-form.component';
+import { ProductoEditComponent } from './productos/producto-edit.component';
 
 import { RecetaService } from './receta.service';
 import { RecetasComponent } from './recetas/recetas.component';
@@ -52,7 +55,9 @@ import { RecetasEditComponent } from './recetas/recetasEdit.component';
 import { StockService } from './stock.service';
 import { StockComponent } from './stock/stock.component';
 import { StockFormComponent } from './stock/stock-form.component';
-
+import { StockPiezasComponent } from './stock/stock-piezas.component';
+import { StockProductosComponent } from './stock/stock-productos.component';
+import { AjusteStockComponent } from './stock/ajuste-stock.component';
 
 //import { NgIfInstanceofDirective } from './directivas/ng-if-instanceof.directive'; // Importa la directiva NgIfInstanceofDirective que se usará en MaterialesListComponent
 import { CustomDirectiveModule } from './directivas/custom-directives.module';
@@ -60,6 +65,9 @@ import { FabricacionService } from './fabricacion.service';
 import { FabricacionesComponent } from './fabricaciones/fabricaciones.component';
 import { FabricacionFormComponent } from './fabricaciones/fabricacion-form.component';
 
+import { VentaService } from './venta.service';
+import { VentasComponent } from './ventas/ventas.component';
+import { VentaFormComponent } from './ventas/venta-form.component';
 
 
 
@@ -82,9 +90,13 @@ import { FabricacionFormComponent } from './fabricaciones/fabricacion-form.compo
   
     ProductosComponent, // Agrega ProductosComponent aquí
     ProductoFormComponent, 
+    ProductoEditComponent,
     
     StockComponent,  
     StockFormComponent, 
+    StockPiezasComponent,
+    StockProductosComponent,
+    AjusteStockComponent,
     
     RecetasComponent,
     RecetaFormComponent,  // Agrega RecetaFormComponent aquí
@@ -100,7 +112,10 @@ import { FabricacionFormComponent } from './fabricaciones/fabricacion-form.compo
     ClienteFormComponent,
 
     ProveedoresComponent,
-    ProveedorFormComponent,  // Agrega ProveedorFormComponent aquí
+    ProveedorFormComponent,
+
+    VentasComponent,  // Agrega ProveedorFormComponent aquí
+    VentaFormComponent,
 
     //NgIfInstanceofDirective
 
@@ -111,6 +126,7 @@ import { FabricacionFormComponent } from './fabricaciones/fabricacion-form.compo
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgxPaginationModule,
     AppRoutingModule, // Incluye el módulo de enrutamiento
     CustomDirectiveModule // Importa el módulo de la directiva
   ],
@@ -124,7 +140,8 @@ import { FabricacionFormComponent } from './fabricaciones/fabricacion-form.compo
     PiezaService, 
     StockService,
     FabricacionService,
-    RecetaService],
+    RecetaService,
+    VentaService],
   bootstrap: [AppComponent],
 
   schemas: [NO_ERRORS_SCHEMA]

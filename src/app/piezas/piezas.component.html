@@ -3,10 +3,24 @@
 
 <div class="piezas-container">
   
-  <button (click)="crearPieza()" class="btn btn-primary mb-3">Agregar Nueva Pieza</button> <!-- Botón para agregar -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <button (click)="crearPieza()" class="btn btn-primary">Agregar Nueva Pieza</button>
+
+    <div class="input-group w-25">
+      <input
+        type="text"
+        [(ngModel)]="filtro"
+        (input)="buscarPiezas()"
+        placeholder="Buscar pieza..."
+        class="form-control"
+      />
+    </div>
+  </div>
+
   <table>
     <thead>
       <tr>
+        <th>Clave</th>
         <th>Nombre</th>
         <th>Descripción</th>
         <th>Piezas minimas en Stock</th>
@@ -14,7 +28,8 @@
       </tr>
     </thead>
   <tbody>
-    <tr *ngFor="let pieza of piezas">
+    <tr *ngFor="let pieza of piezasFiltradas">
+      <td>{{ pieza.clave }}</td> 
       <td>{{ pieza.nombre }}</td> 
       <td>{{ pieza.descripcion }}</td> 
       <td>{{ pieza.stockMinimo }}</td> 

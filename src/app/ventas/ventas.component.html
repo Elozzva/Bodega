@@ -1,0 +1,50 @@
+<h1>VENTAS</h1>
+
+<button (click)="crearVenta()" class="btn btn-primary mb-3">Crear Venta</button>
+
+<table class="table table-striped table-bordered table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Orden de Salida</th>
+      <th>Cliente</th>
+      <th>Fecha</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let venta of ventas">
+      <td>{{ venta.ordenSalida }}</td>
+      <td>{{ venta.cliente?.nombre || 'Cliente no disponible' }}</td>
+      <td>{{ venta.fecha | date: 'dd/MM/yyyy HH:mm' }}</td>
+      <td>{{ venta.estado }}</td>
+      <td>
+        <!-- Botón para subir facturas -->
+        <a 
+          *ngIf="venta.estado === 'en espera de factura'" 
+          [routerLink]="['/venta-form', venta._id]" 
+          class="btn btn-secondary btn-sm"
+        >
+          Subir Facturas
+        </a>
+
+        <!-- Botón para editar (opcional, si es necesario en otros estados) -->
+        <a 
+          [routerLink]="['/venta-form', venta._id]" 
+          class="btn btn-warning btn-sm"
+          *ngIf="venta.estado !== 'en espera de factura'"
+        >
+          Editar
+        </a>
+
+        <!-- Botón para eliminar -->
+        <button 
+          class="btn btn-danger btn-sm" 
+          (click)="eliminarVenta(venta._id)"
+        >
+          Eliminar
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

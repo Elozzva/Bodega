@@ -6,6 +6,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
+      <th>Clave</th>
       <th>Nombre</th>
       <th>Descripción</th>
       <th>Piezas</th>
@@ -14,6 +15,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let producto of productos">
+      <td>{{ producto.clave }}</td>
       <td>{{ producto.name }}</td>
       <td>{{ producto.description }}</td>
       <td>
@@ -25,7 +27,7 @@
       </td>
       <td>
         <!-- Botón para editar -->
-        <button (click)="editarProducto(producto._id)" class="btn btn-warning btn-sm">Editar</button>
+        <button (click)="editarProduct(producto._id)" class="btn btn-warning btn-sm">Editar</button>
         <!-- Botón para eliminar -->
         <button (click)="eliminarProducto(producto._id)" class="btn btn-danger btn-sm">Eliminar</button>
       </td>

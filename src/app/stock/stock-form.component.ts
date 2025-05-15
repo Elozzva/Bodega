@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core';
@@ -13,9 +14,15 @@ import { MaterialService } from '../material.service';
 export class StockFormComponent implements OnInit {
   stockMateriales: any[] = [];
   isEditMode = false;
-  stock: any = {tipo: 'Material'};  // Solo Material, se inicializa como 'Material'
 
-  materiales: any[] = [];  // Inicializamos la lista de materiales
+  stock: any = {
+    tipo: 'Material',
+    cantidad: 0,
+    material: ''
+  };
+
+  materiales: any[] = [];
+  cantidadActual: number = 0;
 
   constructor(
     private stockService: StockService,
@@ -25,32 +32,72 @@ export class StockFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Obtener los materiales para el formulario
+    // Verificar si vienen parámetros tipo e id desde query params
+    this.route.queryParams.subscribe(params => {
+      const tipo = params['tipo'];
+      const id = params['id'];
+
+      if (tipo && id) {
+        this.stock.tipo = this.capitalizeFirst(tipo);
+        if (tipo === 'material') {
+          this.stock.material = id;
+          this.onMaterialChange(); // Mostrar la cantidad actual
+        }
+      }
+    });
+
+    // Obtener todos los materiales para el select
     this.materialService.getMaterials().subscribe(
       data => {
         this.materiales = data;
-        console.log('Materiales cargados:', this.materiales);  // Verifica si se cargan los materiales
+        console.log('Materiales cargados:', this.materiales);
       },
       error => console.error('Error al cargar materiales:', error)
     );
 
+    // Detectar si se está en modo edición
     const stockId = this.route.snapshot.paramMap.get('id');
     if (stockId) {
       this.isEditMode = true;
       this.stockService.getStockById(stockId).subscribe(
         data => {
           this.stock = data;
+          this.onMaterialChange(); // Mostrar la cantidad actual
         },
         error => console.error('Error al cargar el stock:', error)
       );
     }
   }
 
+  // Capitalizar texto (para el tipo)
+  capitalizeFirst(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
+  // Mostrar la cantidad actual del material seleccionado
+  onMaterialChange(): void {
+    const materialSeleccionado = this.stock.material;
+    if (materialSeleccionado) {
+      this.stockService.getStockByMaterial2(materialSeleccionado).subscribe(
+        data => {
+          this.cantidadActual = data?.cantidad || 0;
+          console.log(`Cantidad actual del material ${materialSeleccionado}:`, this.cantidadActual);
+        },
+        error => {
+          console.error('Error al obtener la cantidad del material:', error);
+          this.cantidadActual = 0;
+        }
+      );
+    } else {
+      this.cantidadActual = 0;
+    }
+  }
+
   onSubmit(): void {
     const stockData: any = {
-      tipo: 'Material',  // Se define el tipo como 'Material'
+      tipo: 'Material',
       cantidad: this.stock.cantidad,
-      materialId: this.stock.material  // Asignamos el material seleccionado
+      materialId: this.stock.material
     };
 
     if (!this.stock.material) {
@@ -58,18 +105,21 @@ export class StockFormComponent implements OnInit {
       return;
     }
 
-    // Si estamos en modo de edición, actualizamos el stock
     if (this.isEditMode) {
-      this.stockService.updateStock(this.route.snapshot.paramMap.get('id')!, stockData).subscribe(
+      const stockId = this.route.snapshot.paramMap.get('id')!;
+      this.stockService.updateStock(stockId, stockData).subscribe(
         () => this.router.navigate(['/stocks']),
         error => console.error('Error al actualizar el stock:', error)
       );
     } else {
-      // Crear un nuevo registro de stock para material
       this.stockService.createStock(stockData).subscribe(
         () => this.router.navigate(['/stocks']),
         error => console.error('Error al crear el stock:', error)
       );
     }
-  } 
+  }
+
+  cancelar(): void {
+    this.router.navigate(['/stocks']);
+  }
 }

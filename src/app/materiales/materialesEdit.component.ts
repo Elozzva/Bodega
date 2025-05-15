@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MaterialService } from '../material.service';
@@ -7,14 +8,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Importar
 @Component({
   selector: 'app-materiales-edit',
   templateUrl: './materialesEdit.component.html',
-  styleUrls: ['./materialesEdit.component.css']   
+  styleUrls: ['./materialesEdit.component.css']
 
 })
 export class MaterialesEditComponent implements OnInit {
     material: any = {};
     materialForm: FormGroup= this.fb.group({ // Inicialización de materialForm
+        clave: ['', Validators.required],
         name: ['', Validators.required],
-        description: ['', Validators.required]
+        description: ['', Validators.required],
+        stockMinimo: ['', Validators.required],
       });
 
     constructor(
@@ -26,8 +29,10 @@ export class MaterialesEditComponent implements OnInit {
   
     ngOnInit() {
         this.materialForm = this.fb.group({ // Inicializar materialForm
-          name: ['', Validators.required],
-          description: ['', Validators.required]
+        clave: ['', Validators.required],
+        name: ['', Validators.required],
+        description: ['', Validators.required],
+        stockMinimo: ['', Validators.required],
         });
     
         const id = this.route.snapshot.paramMap.get('id');
@@ -48,5 +53,9 @@ export class MaterialesEditComponent implements OnInit {
               console.error('Error al actualizar el material:', error);
             }
           );
+      }
+
+      cancelar() {
+        this.router.navigate(['/materiales']);
       }
   }

@@ -1,0 +1,27 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  thead {
+    background-color: #343a40;
+    color: white;
+  }
+
+  .modal-content {
+    border-radius: 10px; /* Ejemplo: Bordes redondeados */
+  }
+  
+  .modal-header {
+    background-color: #f8f9fa;
+  }
+  
+  .modal-footer {
+    justify-content: center;
+  }
+  

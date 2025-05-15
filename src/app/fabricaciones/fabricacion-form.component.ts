@@ -9,7 +9,7 @@ import { MaterialService } from '../material.service';
 import { ProveedorService } from '../proveedor.service';
 import { EmpleadoService } from '../empleado.service'; 
 import { RecetaService } from '../receta.service';
-
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-fabricacion-form',
@@ -41,9 +41,9 @@ export class FabricacionFormComponent implements OnInit {
 
   // Inicialización de stockBajo
   stockBajo = false;
-
+  stockDisponible: number | null = null;
   isEditMode = false;
-  isStockAvailable = true;
+  isStockAvailable: any;
 
   constructor(
     private fabricacionService: FabricacionService,
@@ -52,7 +52,8 @@ export class FabricacionFormComponent implements OnInit {
     private proveedorService: ProveedorService,
     private empleadoService: EmpleadoService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private changeDetector: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -98,38 +99,10 @@ export class FabricacionFormComponent implements OnInit {
     }
   }
 
-  // Función para manejar el cambio de la pieza seleccionada
-  onPiezaChange(event: any): void {
-    const piezaId = (event.target as HTMLSelectElement).value;
-
-    // Buscar la receta que coincide con la pieza seleccionada
-    const recetaSeleccionada = this.recetas.find(receta => receta.pieza._id === piezaId);
-    
-    if (recetaSeleccionada) {
-      this.fabricacion.tipo = recetaSeleccionada.seFabrica; // Asignar automáticamente el tipo basado en la receta
-      this.fabricacion.receta = recetaSeleccionada._id; // Establecer la receta seleccionada
-      this.fabricacion.material = recetaSeleccionada.material._id; // Asignar el material de la receta seleccionada
-
-      // Verificar el stock del material asignado
-      this.materialService.obtenerStockPorMaterial(recetaSeleccionada.material._id).subscribe(
-        stock => {
-          if (stock && stock.cantidad > 0) {
-            this.isStockAvailable = true;  // Stock suficiente
-          } else {
-            this.isStockAvailable = false;  // Deshabilitar botón si el stock es insuficiente
-            alert(`El stock del material seleccionado es insuficiente.`);
-          }
-        },
-        error => console.error('Error al verificar el stock del material:', error)
-      );
-    }
-  }
-
 
   // Función que se ejecuta cuando se selecciona un material
   onMaterialChange(event: any): void {
     const materialId = (event.target as HTMLSelectElement)?.value;
-    
     
     console.log('Material cambiado:', materialId);
 
@@ -141,16 +114,14 @@ export class FabricacionFormComponent implements OnInit {
           if (stock && stock.material) {
             const stockDisponible = stock.cantidad;
             const stockMinimo = stock.material.stockMinimo;
-  
+            this.stockDisponible = stock.cantidad;
             this.stockBajo = stockDisponible < stockMinimo;
-  
-            if (this.stockBajo) {
-              alert(`El stock del material está por debajo del mínimo. Stock actual: ${stockDisponible}, Stock mínimo: ${stockMinimo}`);
-            }
+            
   
             this.recetaService.getRecetasByMaterial(materialId).subscribe(
               data => {
                 this.recetas = data;  // Solo las recetas que usan el material seleccionado
+                
                 this.piezas = this.recetas.map(receta => receta.pieza);  // Mapear para obtener solo las piezas de estas recetas
                 console.log('Piezas disponibles para el material seleccionado:', this.piezas);
               },
@@ -169,48 +140,100 @@ export class FabricacionFormComponent implements OnInit {
     }
   }
 
-  onRecetaChange(): void {
+  /* onRecetaChange(): void {
     const recetaSeleccionada = this.recetas.find(r => r._id === this.fabricacion.receta);
-    
-    if (recetaSeleccionada) {
-        this.fabricacion.tipo = recetaSeleccionada.seFabrica;  // Asignar 'interna' o 'externa' según la receta
-        this.fabricacion.material = recetaSeleccionada.material._id; // Asignar el material automáticamente
-
-        // Validar el stock disponible del material
-        this.materialService.obtenerStockPorMaterial(this.fabricacion.material).subscribe(
-          stock => {
-            this.isStockAvailable = stock && stock.cantidad > 0;
-            if (!this.isStockAvailable) {
-              alert('Stock insuficiente para el material seleccionado.');
-            }
-          },
-          error => console.error('Error al verificar el stock del material:', error)
-        );
+    if (recetaSeleccionada && this.fabricacion.cantidadMaterial > 0) {
+      this.fabricacion.piezasCalculadas = recetaSeleccionada.piezasPorUnidad * this.fabricacion.cantidadMaterial;
     }
+  } */
+
+    onRecetaChange(): void {
+      const recetaSeleccionada = this.recetas.find(receta => receta._id === this.fabricacion.receta);
+    
+      if (recetaSeleccionada) {
+        console.log('Receta seleccionada:', recetaSeleccionada);
+    
+        // Asigna el tipo de fabricación basado en la receta seleccionada
+        this.fabricacion.tipo = recetaSeleccionada.seFabrica;
+    
+        console.log('Tipo de fabricación asignado:', this.fabricacion.tipo);
+    
+        this.fabricacion.material = recetaSeleccionada.material; // Mantiene el material asociado
+    
+        // Actualiza la cantidad de piezas calculadas
+        if (this.fabricacion.cantidadMaterial > 0) {
+          this.fabricacion.piezasCalculadas = 
+            recetaSeleccionada.piezasPorUnidad * this.fabricacion.cantidadMaterial;
+        }
+    
+        // Cargar empleados o proveedores según el tipo
+        this.cargarRecursosPorTipo(this.fabricacion.tipo);
+      } else {
+        console.error('No se encontró la receta seleccionada.');
+      }
+    }
+
+    cargarRecursosPorTipo(tipo: string): void {
+      if (tipo === 'interna') {
+        this.empleadoService.getEmpleados().subscribe(
+          data => {
+            this.empleados = data;
+            this.proveedores = []; // Limpia los proveedores si el tipo es interna
+          },
+          error => console.error('Error al cargar empleados:', error)
+        );
+      } else if (tipo === 'externa') {
+        this.proveedorService.getProveedores().subscribe(
+          data => {
+            this.proveedores = data;
+            this.empleados = []; // Limpia los empleados si el tipo es externa
+          },
+          error => console.error('Error al cargar proveedores:', error)
+        );
+      }
+    }
+    
+
+  // Actualiza dinámicamente empleados o proveedores según el tipo de fabricación
+actualizarTipoFabricacion(): void {
+  if (this.fabricacion.tipo === 'interna') {
+    this.empleadoService.getEmpleados().subscribe(
+      data => {
+        this.empleados = data;
+        this.proveedores = []; // Limpiar lista de proveedores
+      },
+      error => console.error('Error al cargar empleados:', error)
+    );
+  } else if (this.fabricacion.tipo === 'externa') {
+    this.proveedorService.getProveedores().subscribe(
+      data => {
+        this.proveedores = data;
+        this.empleados = []; // Limpiar lista de empleados
+      },
+      error => console.error('Error al cargar proveedores:', error)
+    );
+  }
 }
 
-  // Función que maneja la selección de tipo de fabricación
-  onTipoChange(event: Event): void {
-    const tipoSeleccionado = (event.target as HTMLSelectElement)?.value;
+onPiezaChange(event: any): void {
+  const piezaId = (event.target as HTMLSelectElement)?.value;
 
-    if (tipoSeleccionado === 'interna') {
-      this.empleadoService.getEmpleados().subscribe(
-        data => {
-          this.empleados = data;
-          this.proveedores = [];
-        },
-        error => console.error('Error al cargar empleados:', error)
-      );
-    } else if (tipoSeleccionado === 'externa') {
-      this.proveedorService.getProveedores().subscribe(
-        data => {
-          this.proveedores = data;
-          this.empleados = [];
-        },
-        error => console.error('Error al cargar proveedores:', error)
-      );
-    }
+  const recetaSeleccionada = this.recetas.find(receta => receta.pieza._id === piezaId);
+
+  if (recetaSeleccionada) {
+    console.log('Receta seleccionada:', recetaSeleccionada); // Verificar receta seleccionada
+    this.fabricacion.tipo = recetaSeleccionada.seFabrica; // Actualizar el tipo según la receta
+    console.log('Tipo de fabricación asignado:', this.fabricacion.tipo); // Verificar tipo
+    this.fabricacion.receta = recetaSeleccionada._id;
+    this.fabricacion.material = recetaSeleccionada.material._id;
+
+    this.actualizarTipoFabricacion(); // Actualizar empleados o proveedores
+  } else {
+    console.error('Receta no encontrada para la pieza seleccionada');
   }
+}
+
+
 
   onSubmit(): void {
     const fabricacionData = {
