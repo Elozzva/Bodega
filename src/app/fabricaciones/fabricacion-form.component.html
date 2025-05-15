@@ -22,6 +22,10 @@
         </select>
       </div>
 
+      <div class="form-group mb-3" *ngIf="stockDisponible !== null">
+        <p><strong>Stock disponible:</strong> {{ stockDisponible }}</p>
+      </div>
+
       <!-- Ingreso de la cantidad de material -->
       <div class="form-group mb-3" *ngIf="fabricacion.receta">
         <label for="cantidadMaterial">Cantidad de Material a Usar</label>
@@ -67,8 +71,7 @@
       <!-- Botones de enviar y cancelar -->
       <button 
           type="submit" 
-          class="btn btn-success" 
-          [disabled]="!isStockAvailable">
+          class="btn btn-success">
             {{ isEditMode ? 'Actualizar' : 'Crear Fabricación' }}
       </button>
       <a routerLink="/fabricaciones" class="btn btn-secondary">Cancelar</a>

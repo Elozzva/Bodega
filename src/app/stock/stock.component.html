@@ -1,83 +1,150 @@
 <h1 class="text-center my-4">INVENTARIO</h1>
 
-<!-- Enlace para agregar nuevo stock -->
-<!--<button routerLink="/stocks/create">Agregar Stock</button>-->
+<!-- Nav Tabs -->
+<ul class="nav nav-tabs mb-3" id="stockTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="materiales-tab" data-bs-toggle="tab" data-bs-target="#materiales" type="button" role="tab">
+      Materiales
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="piezas-tab" data-bs-toggle="tab" data-bs-target="#piezas" type="button" role="tab">
+      Piezas
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="productos-tab" data-bs-toggle="tab" data-bs-target="#productos" type="button" role="tab">
+      Productos Terminados
+    </button>
+  </li>
+</ul>
 
-<!-- Stock de Materiales -->
-<section>
-  <h2 class="text-center">Stock de Materiales</h2>
-  <button (click)="crearAumentoMaterial()" class="btn btn-primary mb-3">Ingresar Material</button>
-  <table class="table table-striped table-bordered table-hover">
-    <thead class="table-dark">
-      <tr>
-        <th>Material</th>
-        <th>Cantidad</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let stock of stockMateriales">
-        <td>{{ stock.material?.name }}</td>
-        <td>{{ stock.cantidad }}</td>
-        <td>
-          <button class="btn-danger btn-sm" (click)="deleteStock(stock._id)">Eliminar</button>
-        </td>
-      </tr>
-      <tr *ngIf="stockMateriales.length === 0">
-        <td colspan="5" class="text-center">No hay materiales registrados.</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+<!-- Tab Content -->
+<div class="tab-content" id="stockTabsContent">
 
-<!-- Stock de Piezas -->
-<section>
-  <h2 class="text-center">Stock de Piezas</h2>
-  <table class="table table-striped table-bordered table-hover">
-    <thead class="table-dark">
-      <tr>
-        <th>Pieza</th>
-        <th>Cantidad</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let stock of stockPiezas">
-        <td>{{ stock.pieza?.nombre }}</td> <!-- Ajusta si 'pieza' es diferente -->
-        <td>{{ stock.cantidad }}</td>
-        <td>
-          <button class="btn-danger btn-sm" (click)="deleteStock(stock._id)">Eliminar</button>
-        </td>
-      </tr>
-      <tr *ngIf="stockPiezas.length === 0">
-        <td colspan="5" class="text-center">No hay piezas registradas.</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+  <!-- 🔹 TAB: Materiales -->
+  <div class="tab-pane fade show active" id="materiales" role="tabpanel">
 
-<!-- Stock de Productos Terminados -->
-<section>
-  <h2 class="text-center">Stock de Productos Terminados</h2>
-  <table class="table table-striped table-bordered table-hover">
-    <thead class="table-dark">
-      <tr>
-        <th>Producto</th>
-        <th>Cantidad</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let stock of stockProductos">
-        <td>{{ stock.producto?.name }}</td> 
-        <td>{{ stock.cantidad }}</td>
-        <td>
-          <button (click)="deleteStock(stock._id)">Eliminar</button>
-        </td>
-      </tr>
-      <tr *ngIf="stockProductos.length === 0">
-        <td colspan="5" class="text-center">No hay productos registrados.</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+    <!-- Stock de Materiales -->
+    <section>
+      <h2 class="text-center">Stock de Materiales</h2>
+      <button (click)="crearAumentoMaterial()" class="btn btn-primary mb-3">Ingresar Material</button>
+      
+      <input type="text" [(ngModel)]="filtroMateriales" placeholder="Buscar Material" class="form-control mb-3 w-25 mx-auto">
+      
+      <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th (click)="ordenarLista(stockMateriales, 'clave', ordenMateriales)">Clave ⬍</th>
+            <th (click)="ordenarLista(stockMateriales, 'name', ordenMateriales)">Material ⬍</th>
+            <th (click)="ordenarLista(stockMateriales, 'cantidad', ordenMateriales)">Cantidad ⬍</th>
+            <th>Stock Mínimo</th>
+            <th>Última Modificación</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stock of getPaginatedData(getFilteredData(stockMateriales, filtroMateriales), pageMateriales, pageSizeMateriales)"
+              [ngClass]="{'table-danger': stock.material?.stockMinimo !== undefined && stock.cantidad <= stock.material.stockMinimo}">
+            <td>{{ stock.material?.clave }}</td>
+            <td>{{ stock.material?.name }}</td>
+            <td class="text-center">{{ stock.cantidad }}</td>
+            <td class="text-center">{{ stock.material?.stockMinimo }}</td>
+            <td>{{ stock.fechaActualizacion ? (stock.fechaActualizacion | date: 'dd/MM/yyyy HH:mm') : 'Sin cambios' }}</td>
+            <td>
+              <button class="btn btn-success btn-sm me-1" (click)="agregarStock('material', stock.material?._id)">Agregar</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteStock(stock._id)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-center">
+        <button [disabled]="pageMateriales === 1" (click)="changePage('materiales', -1)" class="btn btn-secondary">Anterior</button>
+        <button [disabled]="pageMateriales * pageSizeMateriales >= stockMateriales.length" (click)="changePage('materiales', 1)" class="btn btn-secondary">Siguiente</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- 🔹 TAB: Piezas -->
+  <div class="tab-pane fade" id="piezas" role="tabpanel">
+
+    <!-- Stock de Piezas -->
+    <section>
+      <h2 class="text-center">Stock de Piezas</h2>
+      <button routerLink="/stock-piezas" class="btn btn-primary mb-3">Editar Piezas</button>
+
+      <input type="text" [(ngModel)]="filtroPiezas" placeholder="Buscar Pieza" class="form-control mb-3 w-25 mx-auto">
+
+      <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th (click)="ordenarLista(stockPiezas, 'clave', ordenPiezas)">Clave ⬍</th>
+            <th (click)="ordenarLista(stockPiezas, 'nombre', ordenPiezas)">Pieza ⬍</th>
+            <th (click)="ordenarLista(stockPiezas, 'cantidad', ordenPiezas)">Cantidad ⬍</th>
+            <th (click)="ordenarLista(stockPiezas, 'updatedAt', ordenPiezas)">Última Modificación ⬍</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stock of getPaginatedData(getFilteredData(stockPiezas, filtroPiezas), pagePiezas, pageSizePiezas)">
+            <td>{{ stock.pieza?.clave }}</td>
+            <td>{{ stock.pieza?.nombre }}</td>
+            <td class="text-center">{{ stock.cantidad }}</td>
+            <td>{{ stock.fechaActualizacion ? (stock.fechaActualizacion | date: 'dd/MM/yyyy HH:mm') : 'Sin cambios' }}</td>
+            <td>
+              <button class="btn btn-success btn-sm me-1" (click)="agregarStock('pieza', stock.pieza?._id)">Agregar</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteStock(stock._id)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="text-center">
+        <button [disabled]="pagePiezas === 1" (click)="changePage('piezas', -1)" class="btn btn-secondary">Anterior</button>
+        <button [disabled]="pagePiezas * pageSizePiezas >= stockPiezas.length" (click)="changePage('piezas', 1)" class="btn btn-secondary">Siguiente</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- 🔹 TAB: Productos -->
+  <div class="tab-pane fade" id="productos" role="tabpanel">
+
+    <!-- Stock de Productos Terminados -->
+    <section>
+      <h2 class="text-center">Stock de Productos Terminados</h2>
+      <button routerLink="/stock-productos" class="btn btn-primary mb-3">Editar Productos</button>
+
+      <input type="text" [(ngModel)]="filtroProductos" placeholder="Buscar Producto" class="form-control mb-3 w-25 mx-auto">
+
+      <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th (click)="ordenarLista(stockProductos, 'clave', ordenProductos)">Clave ⬍</th>
+            <th (click)="ordenarLista(stockProductos, 'name', ordenProductos)">Producto ⬍</th>
+            <th (click)="ordenarLista(stockProductos, 'cantidad', ordenProductos)">Cantidad ⬍</th>
+            <th (click)="ordenarLista(stockProductos, 'updatedAt', ordenProductos)">Última Modificación ⬍</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stock of getPaginatedData(getFilteredData(stockProductos, filtroProductos), pageProductos, pageSizeProductos)">
+            <td>{{ stock.producto?.clave }}</td>
+            <td>{{ stock.producto?.name }}</td>
+            <td class="text-center">{{ stock.cantidad }}</td>
+            <td>{{ stock.fechaActualizacion ? (stock.fechaActualizacion | date: 'dd/MM/yyyy HH:mm') : 'Sin cambios' }}</td>
+            <td>
+              <button class="btn btn-success btn-sm me-1" (click)="agregarStock('producto', stock.producto?._id)">Agregar</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteStock(stock._id)">Eliminar</button>
+            </td>
+            
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="text-center">
+        <button [disabled]="pageProductos === 1" (click)="changePage('productos', -1)" class="btn btn-secondary">Anterior</button>
+        <button [disabled]="pageProductos * pageSizeProductos >= stockProductos.length" (click)="changePage('productos', 1)" class="btn btn-secondary">Siguiente</button>
+      </div>
+    </section>
+  </div>
+</div>

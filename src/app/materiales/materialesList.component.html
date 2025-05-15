@@ -1,18 +1,39 @@
 <h1>MATERIALES</h1>
 
-<button (click)="crearMaterial()" class="btn btn-primary mb-3">Agregar Material</button>
+<!-- Contenedor para la búsqueda y el botón -->
+<div class="d-flex justify-content-between mb-3">
+  <input type="text" [(ngModel)]="searchText" (input)="filtrarMateriales()" 
+    placeholder="Buscar material..." class="form-control" style="width: 25%;">
 
-<table>
+  <button (click)="crearMaterial()" class="btn btn-primary">Agregar Material</button>
+</div>
+
+<!-- Tabla con encabezados clickeables -->
+<table class="table table-striped">
   <thead>
     <tr>
-      <th>Nombre</th>
-      <th>Descripción</th>
-      <th>Material minimo en stock</th>
-      <th></th>
+      <th (click)="ordenar('clave')">
+        Clave
+        <span *ngIf="columnaOrden === 'clave'">{{ ordenAscendente ? '⬆️' : '⬇️' }}</span>
+      </th>
+      <th (click)="ordenar('name')">
+        Nombre
+        <span *ngIf="columnaOrden === 'name'">{{ ordenAscendente ? '⬆️' : '⬇️' }}</span>
+      </th>
+      <th (click)="ordenar('description')">
+        Descripción
+        <span *ngIf="columnaOrden === 'description'">{{ ordenAscendente ? '⬆️' : '⬇️' }}</span>
+      </th>
+      <th (click)="ordenar('stockMinimo')">
+        Material mínimo en stock
+        <span *ngIf="columnaOrden === 'stockMinimo'">{{ ordenAscendente ? '⬆️' : '⬇️' }}</span>
+      </th>
+      <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
-      <tr *ngFor="let material of materials">
+      <tr *ngFor="let material of materialesFiltrados">
+        <td>{{ material.clave }}</td>
         <td>{{ material.name }}</td>
         <td>{{ material.description }}</td>
         <td>{{ material.stockMinimo }}</td>

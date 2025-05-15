@@ -1,0 +1,50 @@
+<h2 class="text-center my-4">{{ isEditMode ? 'Editar Venta' : 'Nueva Venta' }}</h2>
+<div class="card mx-auto my-4" style="max-width: 800px;">
+  <div class="card-body">
+    <form (ngSubmit)="onSubmit()">
+      <!-- Selección de cliente -->
+      <div class="form-group mb-3">
+        <label for="cliente">Cliente</label>
+        <select [(ngModel)]="venta.cliente" name="cliente" required class="form-control">
+          <option *ngFor="let cliente of clientes" [value]="cliente._id">{{ cliente.nombre }}</option>
+        </select>
+      </div>
+
+      <!-- Selección de productos -->
+      <div class="form-group mb-3">
+        <label for="productos">Productos</label>
+        <div *ngFor="let producto of venta.productos; let i = index" class="mb-3">
+          <select
+            [(ngModel)]="venta.productos[i]._id"
+            name="producto{{ i }}"
+            required
+            class="form-control"
+            (change)="onProductoChange(i)"
+          >
+            <option *ngFor="let stock of stockProductos" [value]="stock.producto._id">
+              {{ stock.producto.name }}
+            </option>
+          </select>
+          <small class="form-text text-muted">
+            Disponibles en stock: {{ venta.productos[i].cantidadDisponible || 'Cargando...' }}
+          </small>
+          <input
+            type="number"
+            [(ngModel)]="venta.productos[i].cantidad"
+            name="cantidad{{ i }}"
+            min="1"
+            [max]="venta.productos[i].cantidadDisponible || 0"
+            required
+            class="form-control mt-2"
+            placeholder="Cantidad"
+          />
+        </div>
+        <button type="button" class="btn btn-primary" (click)="agregarProducto()">Agregar Producto</button>
+      </div>
+
+      <!-- Botones -->
+      <button type="submit" class="btn btn-success">{{ isEditMode ? 'Actualizar' : 'Guardar Venta' }}</button>
+      <a routerLink="/ventas" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+</div>

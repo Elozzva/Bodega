@@ -1,0 +1,32 @@
+<div class="stock-piezas-container">
+    <h2 class="text-center my-4">Stock de Piezas</h2>
+  
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pieza</th>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+            <th>Última Actualización</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stock of piezasStock; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ stock.pieza.nombre }}</td>
+            <td>{{ stock.pieza.descripcion }}</td>
+            <td>{{ stock.cantidad }}</td>
+            <td>{{ stock.fechaActualizacion | date: 'short' }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" (click)="modificarStock(stock, 'aumentar')">Aumentar</button>
+              <button class="btn btn-danger btn-sm" (click)="modificarStock(stock, 'disminuir')">Disminuir</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

@@ -12,6 +12,7 @@ import { MaterialService } from '../material.service';
 })
 export class MaterialFormComponent implements OnInit {
   material = {
+    clave: '',
     name: '',
     description: '',
     stockMinimo: 10
@@ -48,5 +49,9 @@ export class MaterialFormComponent implements OnInit {
         error => console.error('Error al crear el material:', error)
       );
     }
+  }
+
+  cancelar() {
+    this.router.navigate(['/materiales']);
   }
 }

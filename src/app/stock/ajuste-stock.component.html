@@ -1,0 +1,48 @@
+<h1 class="text-center my-4">Ajuste de Stock</h1>
+
+<div class="card mx-auto" style="max-width: 500px;">
+  <div class="card-body">
+
+    <!-- Información de la pieza o producto -->
+    <ng-container *ngIf="stockData">
+      <h5 *ngIf="stockData?.pieza">Pieza: {{ stockData?.pieza?.nombre || 'Sin nombre' }}</h5>
+      <h5 *ngIf="stockData?.producto">Producto: {{ stockData?.producto?.name || 'Sin nombre' }}</h5>
+      
+      <p *ngIf="stockData?.pieza">Descripción: {{ stockData?.pieza?.descripcion || 'Sin descripción' }}</p>
+      <p *ngIf="stockData?.producto">Descripción: {{ stockData?.producto?.description || 'Sin descripción' }}</p>
+      
+      <p>Stock Actual: {{ stockData?.cantidad }}</p>
+    </ng-container>
+
+    <!-- Formulario para ajuste -->
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="cantidad">Cantidad a {{ accion }}</label>
+        <input
+          type="number"
+          id="cantidad"
+          class="form-control"
+          [(ngModel)]="cantidad"
+          name="cantidad"
+          required
+          min="1"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="motivo">Motivo del ajuste</label>
+        <textarea
+          id="motivo"
+          class="form-control"
+          [(ngModel)]="motivo"
+          name="motivo"
+          required
+        ></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+      <!-- <a routerLink="/stock-piezas" class="btn btn-secondary">Cancelar</a> -->
+      <button routerLink="/stocks" class="btn btn-secondary mt-3">Cancelar</button>
+    </form>
+  </div>
+</div>

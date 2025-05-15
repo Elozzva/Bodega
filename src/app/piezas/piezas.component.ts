@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core';
 import { PiezaService } from '../pieza.service';
@@ -12,6 +13,8 @@ import { NotificationService } from '../notification.service';
 })
 export class PiezasComponent implements OnInit {
   piezas: any[] = [];
+  filtro: string = '';
+  piezasFiltradas: any[] = [];
 
   constructor(
     private piezaService: PiezaService, 
@@ -26,6 +29,7 @@ export class PiezasComponent implements OnInit {
     this.piezaService.getPiezas().subscribe(
       (data) => {
         this.piezas = data;
+        this.piezasFiltradas = data;
       },
       (error) => {
         this.notificationService.showError('Error al obtener las piezas');
@@ -37,6 +41,17 @@ export class PiezasComponent implements OnInit {
   crearPieza(): void {
     this.router.navigate(['piezas/crear']);
   }
+
+  buscarPiezas(): void {
+    const term = this.filtro.toLowerCase().trim();
+  
+    this.piezasFiltradas = this.piezas.filter(pieza =>
+      pieza.clave?.toLowerCase().includes(term) ||
+      pieza.nombre?.toLowerCase().includes(term) ||
+      pieza.descripcion?.toLowerCase().includes(term)
+    );
+  }
+  
 
   editarPieza(id: string): void {
     this.router.navigate(['piezas/edit', id]);  // Redirige a un formulario de edición

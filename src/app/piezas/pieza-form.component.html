@@ -6,6 +6,11 @@
     
       <form (ngSubmit)="onSubmit(piezaForm)" #piezaForm="ngForm">
         <div class="form-group mb-3">
+          <label for="clave" class="form-label">Clave</label>
+          <input type="text" id="clave" name="clave" [(ngModel)]="pieza.clave" class="form-control" required>
+        </div>
+
+        <div class="form-group mb-3">
           <label for="nombre" class="form-label">Nombre</label>
           <input type="text" id="nombre" name="nombre" [(ngModel)]="pieza.nombre" class="form-control" required>
         </div>

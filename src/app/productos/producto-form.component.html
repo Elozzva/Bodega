@@ -3,6 +3,12 @@
 <div class="card mx-auto my-4" style="max-width: 600px;">
   <div class="card-body">
     <form (ngSubmit)="onSubmit()">
+      <!-- Campo de la clave del producto -->
+      <div class="form-group mb-3">
+        <label for="clave">Clave del Producto</label>
+        <input type="text" id="clave" [(ngModel)]="producto.clave" name="clave" required class="form-control">
+      </div>
+
       <!-- Campo de nombre del producto -->
       <div class="form-group mb-3">
         <label for="name">Nombre del Producto</label>

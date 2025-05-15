@@ -64,3 +64,8 @@
     background-color: #1976d2;  /* Cambiar el color de fondo al pasar el mouse */
     color: white;  /* Texto blanco sobre fondo azul */
   }
+
+  /* En tu archivo CSS global o en el CSS del componente padre */
+.content-below-toolbar {
+  padding-top: 60px; /* Ajusta este valor según la altura de tu toolbar */
+}

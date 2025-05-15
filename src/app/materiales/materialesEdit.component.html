@@ -1,15 +1,42 @@
-<h1>MATERIALES</h1>
-<h2>Editar material</h2>
+<h1 class="text-center my-4">Editar Material</h1>
 
-<form [formGroup]="materialForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="name">Nombre del material:</label>
-      <input type="text" id="name" formControlName="name">
+<!-- Contenedor principal para centrar la card -->
+<div class="d-flex justify-content-center">
+  <div class="card shadow p-4" style="width: 50%;">
+    <div class="card-body">
+      <h4 class="card-title text-center mb-4">Información del Material</h4>
+
+      <form [formGroup]="materialForm" (ngSubmit)="onSubmit()">
+        <!-- Clave del material -->
+        <div class="form-group mb-3">
+          <label for="clave" class="form-label">Clave del material:</label>
+          <input type="text" id="clave" formControlName="clave" class="form-control">
+        </div>
+        
+        <!-- Nombre del material -->
+        <div class="form-group mb-3">
+          <label for="name" class="form-label">Nombre del material:</label>
+          <input type="text" id="name" formControlName="name" class="form-control">
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group mb-3">
+          <label for="description" class="form-label">Descripción:</label>
+          <textarea id="description" formControlName="description" class="form-control" rows="3"></textarea>
+        </div>
+
+        <!-- Stock Mínimo -->
+        <div class="form-group mb-3">
+          <label for="stockMinimo" class="form-label">Stock Mínimo</label>
+          <input type="number" id="stockMinimo" formControlName="stockMinimo" class="form-control" required>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex justify-content-between mt-3">
+          <button type="submit" class="btn btn-success">Guardar</button>
+          <button type="button" (click)="cancelar()" class="btn btn-secondary">Cancelar</button>
+        </div>
+      </form>
     </div>
-    <div class="form-group">
-      <label for="description">Descripción:</label>
-      <textarea id="description" formControlName="description"></textarea>
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Guardar</button>
-  </form>
+  </div>
+</div>

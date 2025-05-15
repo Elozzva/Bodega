@@ -11,6 +11,7 @@ import { NotificationService } from '../notification.service';
 })
 export class PiezasEditComponent implements OnInit {
   pieza = {
+    clave: '',
     nombre: '',
     descripcion: '',
     stockMinimo: 10
@@ -51,5 +52,9 @@ export class PiezasEditComponent implements OnInit {
         }
       );
     }
+  }
+
+  cancelar(): void {
+    this.router.navigate(['/piezas']);
   }
 }

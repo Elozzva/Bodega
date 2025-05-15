@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 
 interface Material {
   _id: string;
+  clave: string;
   name: string;
   description: string;
   stockMinimo: number;
@@ -27,6 +28,7 @@ export class MaterialesComponent implements OnInit {
     private router: Router
     ) { 
     this.materialForm = this.formBuilder.group({
+      clave: ['', Validators.required],
       name: ['', Validators.required],
       description: ['', Validators.required],
       stockMinimo: [10, Validators.required]
@@ -57,5 +59,9 @@ export class MaterialesComponent implements OnInit {
           }
         );
     }
+  }
+
+  cancelar() {
+    this.router.navigate(['/materiales']);
   }
 }

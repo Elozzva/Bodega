@@ -1,0 +1,30 @@
+<h1 class="text-center my-4">Stock de Productos Terminados</h1>
+
+<!-- Botón para volver al stock general -->
+<a routerLink="/stocks" class="btn btn-secondary mb-3">Volver al Stock General</a>
+
+<!-- Tabla de productos terminados -->
+<table class="table table-striped table-bordered table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Producto</th>
+      <th>Descripción</th>
+      <th>Cantidad</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let stock of stockProductos">
+      <td>{{ stock.producto?.name }}</td>
+      <td>{{ stock.producto?.description }}</td>
+      <td>{{ stock.cantidad }}</td>
+      <td>
+        <button class="btn btn-success btn-sm" (click)="abrirAjuste(stock, 'aumentar')">Aumentar</button>
+        <button class="btn btn-warning btn-sm" (click)="abrirAjuste(stock, 'disminuir')">Disminuir</button>
+      </td>
+    </tr>
+    <tr *ngIf="stockProductos.length === 0">
+      <td colspan="4" class="text-center">No hay productos registrados.</td>
+    </tr>
+  </tbody>
+</table>

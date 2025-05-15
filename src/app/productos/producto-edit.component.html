@@ -1,0 +1,58 @@
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
+<h1 class="text-center my-4">Editar Producto</h1>
+
+<div class="card mx-auto my-4" style="max-width: 600px;">
+  <div class="card-body">
+    <form [formGroup]="productoForm" (ngSubmit)="onSubmit()">
+      <!-- Clave del producto -->
+      <div class="form-group mb-3">
+        <label for="clave">Clave del Producto</label>
+        <input type="text" id="clave" formControlName="clave" class="form-control">
+      </div>
+
+      <!-- Nombre del producto -->
+      <div class="form-group mb-3">
+        <label for="name">Nombre del Producto</label>
+        <input type="text" id="name" formControlName="name" class="form-control">
+      </div>
+
+      <!-- Descripción -->
+      <div class="form-group mb-3">
+        <label for="description">Descripción</label>
+        <textarea id="description" formControlName="description" class="form-control"></textarea>
+      </div>
+
+      <!-- Piezas asociadas al producto -->
+        <div class="form-group mb-3">
+            <label>Piezas</label>
+            <div formArrayName="piezas">
+            <div *ngFor="let pieza of piezas.controls; let i = index" class="form-row" [formGroupName]="i">
+                <!-- Selector de piezas -->
+                <div class="col mb-3">
+                <select formControlName="pieza" class="form-control" required>
+                    <option *ngFor="let piezaDisponible of piezasDisponibles" [value]="piezaDisponible._id">
+                    {{ piezaDisponible.nombre }}
+                    </option>
+                </select>
+                </div>
+                <!-- Campo de cantidad -->
+                <div class="col mb-3">
+                <input type="number" formControlName="cantidad" class="form-control" required min="1">
+                </div>
+                <!-- Botón para eliminar pieza -->
+                <div class="col">
+                <button type="button" (click)="eliminarPieza(i)" class="btn btn-danger">Eliminar</button>
+                </div>
+            </div>
+            </div>
+            <button type="button" (click)="agregarPieza()" class="btn btn-primary">Agregar otra pieza</button>
+        </div>
+
+      <!-- Botones -->
+      <div class="d-flex justify-content-between mt-3">
+        <button type="submit" class="btn btn-success">Actualizar Producto</button>
+        <button type="button" (click)="cancelar()" class="btn btn-secondary">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

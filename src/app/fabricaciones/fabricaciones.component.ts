@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core'; 
@@ -15,6 +16,13 @@ export class FabricacionesComponent implements OnInit {
   stocks: any[] = [];
   advertencias: string[] = [];
 
+  // Variables de paginación
+  currentPage: number = 1; // Página actual
+  pageSize: number = 8; // Cantidad de elementos por página
+  totalItems: number = 0; // Total de elementos
+
+  // Exponer Math para usarlo en el template
+  Math = Math;
 
   constructor(
     private fabricacionService: FabricacionService,  
@@ -34,6 +42,18 @@ export class FabricacionesComponent implements OnInit {
   cargarFabricaciones(): void {
     this.fabricacionService.getFabricaciones().subscribe(
       data => {
+        // Ordenar de la más reciente a la más antigua
+        const sortedFabricaciones = data.fabricaciones.sort(
+          (a: any, b: any) => new Date(b.fechaEntrega).getTime() - new Date(a.fechaEntrega).getTime()
+        );
+
+        // Total de elementos para la paginación
+        this.totalItems = sortedFabricaciones.length;
+
+        // Asignar fabricaciones paginadas
+        const startIndex = (this.currentPage - 1) * this.pageSize;
+        this.fabricaciones = sortedFabricaciones.slice(startIndex, startIndex + this.pageSize);
+
         this.fabricaciones = data.fabricaciones.map((fabricacion: any) => {
           fabricacion.proveedor = fabricacion.proveedor || { nombre: 'Proveedor no disponible' };
           fabricacion.empleado = fabricacion.empleado || { nombre: 'Empleado no disponible' };
@@ -44,6 +64,10 @@ export class FabricacionesComponent implements OnInit {
     );
   }
   
+  cambiarPagina(page: number): void {
+    this.currentPage = page;
+    this.cargarFabricaciones();
+  }
 
    // Método para iniciar una fabricación (cambia el estado a "en progreso")
   iniciarFabricacion(fabricacion: any): void {

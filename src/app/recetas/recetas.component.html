@@ -4,6 +4,16 @@
 
 <button (click)="crearReceta()" class="btn btn-primary mb-3">Agregar Receta</button>
 
+<div class="input-group w-25 mb-3">
+  <input
+    type="text"
+    [(ngModel)]="filtro"
+    (input)="buscarRecetas()"
+    placeholder="Buscar por pieza o material..."
+    class="form-control"
+  />
+</div>
+
 <div class="recetas-container">
   <table>
     <thead>
@@ -16,7 +26,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let receta of recetas">        
+      <tr *ngFor="let receta of recetasFiltradas">        
         <td>{{ receta.pieza.nombre }}</td>
         <td>{{ receta.material.name }}</td>
         <td>{{ receta.piezasPorUnidad }}</td>

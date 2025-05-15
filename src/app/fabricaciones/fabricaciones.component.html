@@ -2,7 +2,7 @@
 
 <button (click)="crearFabricacion()" class="btn btn-primary mb-3">Iniciar Fabricación</button>
 
-<table>
+<table class="table table-striped">
   <thead>
     <tr>
       <th>Material</th>
@@ -11,7 +11,7 @@
       <th>Proveedor/Empleado</th>
       <th>Fecha de Entrega</th>
       <th>Estado</th>
-      <th></th>
+      <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
@@ -40,21 +40,20 @@
           </button>
         </td>
       </tr>
-
-      <!-- Mensaje para cuando el stock está bajo, separado en otro tr -->
-      <tr *ngIf="advertencias.length>0">
-        <ng-container *ngFor="let advertencia of advertencias" >
-          <td colspan="7" class="text-center alert alert-warning">
-            {{ advertencias }}
-          </td>
-        </ng-container>
-      </tr>
     </ng-container>
     
     <!-- Mensaje para cuando no haya fabricaciones -->
     <tr *ngIf="fabricaciones.length === 0">
       <td colspan="7" class="text-center">No hay fabricaciones por hacer.</td>
     </tr>
-    
   </tbody>
 </table>
+
+<!-- Paginación -->
+<nav *ngIf="totalItems > pageSize">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" *ngFor="let page of [].constructor(Math.ceil(totalItems / pageSize)); let i = index" [class.active]="currentPage === i + 1">
+      <button class="page-link" (click)="cambiarPagina(i + 1)">{{ i + 1 }}</button>
+    </li>
+  </ul>
+</nav>
